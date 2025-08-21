@@ -17,25 +17,27 @@ This guide will teach you how to deploy your Streamlit calculator to AWS using t
 
 ---
 
-## Phase 1: Set Up GitHub Integration with CodeStar Connections
+## Phase 1: Set Up GitHub Integration
 
-### Step 1.1: Create CodeStar Connection to GitHub
+### Step 1.1: Create GitHub Personal Access Token
 
-**What this does**: Creates a secure, managed connection between AWS and your GitHub account. This is the modern, recommended approach that doesn't require storing tokens.
+**What this does**: Creates a secure token that allows AWS to access your GitHub repository without storing your password.
 
-1. **Open AWS Console** → Search for **"CodeStar"** → Click **"CodeStar"**
-2. **Click "Connections"** in the left sidebar
-3. **Click "Create connection"**
-4. **Select provider**: **GitHub**
-5. **Connection name**: `github-connection`
-6. **Click "Connect to GitHub"**
-7. **GitHub will open** → **Click "Authorize AWS Connector for GitHub"**
-8. **Select your GitHub account** if prompted
-9. **Click "Connect"**
-10. **You should see "Connection status: Available"**
-11. **Copy the Connection ARN** (looks like: `arn:aws:codestar-connections:us-east-1:804711833877:connection/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`)
+1. **Go to GitHub** → **Sign in to your account**
+2. **Click your profile picture** (top right) → **Settings**
+3. **Scroll down** → **Developer settings** (left sidebar)
+4. **Personal access tokens** → **Tokens (classic)**
+5. **Click "Generate new token"** → **"Generate new token (classic)"**
+6. **Note**: `AWS CodePipeline Access`
+7. **Expiration**: `90 days` (or longer if you prefer)
+8. **Select scopes** (check these boxes):
+   - ✅ `repo` (Full control of private repositories)
+   - ✅ `admin:repo_hook` (Full control of repository hooks)
+9. **Click "Generate token"**
+10. **Copy the token immediately** (you won't see it again!)
+    - Example: `ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
 
-**Important**: Keep this Connection ARN handy - you'll need it for CodePipeline setup.
+**Important**: Save this token securely - you'll need it for CodePipeline setup.
 
 ---
 
@@ -341,13 +343,15 @@ aws iam add-role-to-instance-profile --instance-profile-name streamlit-calculato
 4. **Click "Next"**
 
 ### Source Stage:
-5. **Source provider**: `GitHub (Version 2)`
-6. **Connection**: Select your `github-connection` (the one you created in Phase 1)
-7. **Repository name**: `swindsors/PythonCalculator`
-8. **Branch name**: `main`
-9. **Change detection options**: `Start the pipeline on source code change` (should be checked by default)
-10. **Output artifact format**: `CodePipeline default`
-11. **Click "Next"**
+5. **Source provider**: `GitHub (Version 1)`
+6. **GitHub repository**: `https://github.com/swindsors/PythonCalculator.git`
+7. **Branch**: `main`
+8. **GitHub personal access token**: 
+   - **Click "Connect to GitHub"**
+   - **Paste your personal access token** (the one you created in Phase 1)
+   - **Click "Connect"**
+9. **Change detection options**: `Use GitHub webhooks` (recommended)
+10. **Click "Next"**
 
 ### Build Stage:
 11. **Build provider**: `AWS CodeBuild`
@@ -422,9 +426,13 @@ Now whenever you want to update your calculator:
 ## Troubleshooting
 
 ### Pipeline Fails at Source Stage
-- **Check**: CodeStar Connection status (should show "Available")
-- **Fix**: Go to CodeStar → Connections → Select your connection → If status is "Pending", complete the authorization
-- **Alternative**: Delete and recreate the CodeStar connection
+- **Check**: GitHub personal access token is valid and has correct permissions
+- **Fix**: Go to GitHub → Settings → Developer settings → Personal access tokens → Check if token is expired
+- **Common issues**:
+  - Token expired (regenerate a new one)
+  - Missing `repo` or `admin:repo_hook` permissions
+  - Wrong repository URL format
+- **Alternative**: Delete and recreate the pipeline with a new token
 
 ### Build Fails
 - **Check**: CodeBuild logs (click on the failed build)

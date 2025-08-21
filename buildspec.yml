@@ -7,7 +7,7 @@ phases:
     commands:
       - echo Install phase started on `date`
       - pip install --upgrade pip setuptools wheel
-      - echo "Installing dependencies with binary wheels only..."
+      - echo Installing dependencies with binary wheels only
       - pip install --only-binary=:all: --no-compile -r requirements.txt
   
   pre_build:
