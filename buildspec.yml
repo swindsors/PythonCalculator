@@ -5,25 +5,25 @@ phases:
     runtime-versions:
       python: 3.11
     commands:
-      - echo Install phase started on `date`
+      - echo "Install phase started on $(date)"
       - pip install --upgrade pip setuptools wheel
-      - echo Installing dependencies with binary wheels only
-      - pip install --only-binary=:all: --no-compile -r requirements.txt
+      - echo "Installing dependencies with binary wheels only"
+      - pip install --only-binary=all --no-compile -r requirements.txt
   
   pre_build:
     commands:
-      - echo Pre-build phase started on `date`
-      - echo Testing the application
+      - echo "Pre-build phase started on $(date)"
+      - echo "Testing the application"
   
   build:
     commands:
-      - echo Build phase started on `date`
-      - echo Build completed on `date`
+      - echo "Build phase started on $(date)"
+      - echo "Build completed on $(date)"
   
   post_build:
     commands:
-      - echo Post-build phase started on `date`
-      - echo Build completed successfully
+      - echo "Post-build phase started on $(date)"
+      - echo "Build completed successfully"
 
 artifacts:
   files:
