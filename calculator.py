@@ -2,7 +2,7 @@ import streamlit as st
 import math
 
 def main():
-    st.title("🧮 Simple Calculator")
+    st.title("🧮 Simple Calculator1")
     st.write("A simple calculator built with Streamlit")
     
     # Create tabs for different calculator modes
