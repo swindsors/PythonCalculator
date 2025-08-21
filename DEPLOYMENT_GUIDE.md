@@ -44,22 +44,17 @@ The deployment architecture includes:
        └── stop_server.sh
    ```
 
-### Step 2: Set Up GitHub Personal Access Token
+### Step 2: Note About GitHub Connection
 
-1. **Create GitHub Personal Access Token**:
-   - Go to GitHub Settings → Developer settings → Personal access tokens
-   - Click "Generate new token (classic)"
-   - Select scopes: `repo`, `admin:repo_hook`
-   - Copy the generated token
+**Important**: The CloudFormation template now uses CodeStar Connections instead of personal access tokens. After the stack is created, you'll need to complete the GitHub authorization:
 
-2. **Store token in AWS Secrets Manager**:
-   ```bash
-   aws secretsmanager create-secret \
-     --name github-token \
-     --description "GitHub personal access token for CodePipeline" \
-     --secret-string '{"token":"YOUR_GITHUB_TOKEN_HERE"}' \
-     --region us-east-1
-   ```
+1. **After stack creation**, go to AWS Console → CodeStar → Connections
+2. **Find your connection** (will show as "Pending")
+3. **Click "Update pending connection"**
+4. **Complete the GitHub authorization** when prompted
+5. **Connection status should change to "Available"**
+
+This is a one-time setup that provides more secure integration with GitHub.
 
 ### Step 3: Create EC2 Key Pair (if you don't have one)
 

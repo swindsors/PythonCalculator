@@ -266,6 +266,13 @@ Resources:
           Key: Name
           Value: !Sub '${ApplicationName}-instance'
 
+  # CodeStar Connection for GitHub
+  GitHubConnection:
+    Type: AWS::CodeStarConnections::Connection
+    Properties:
+      ConnectionName: !Sub '${ApplicationName}-github-connection'
+      ProviderType: GitHub
+
   # CodePipeline
   CodePipeline:
     Type: AWS::CodePipeline::Pipeline
@@ -281,14 +288,14 @@ Resources:
             - Name: SourceAction
               ActionTypeId:
                 Category: Source
-                Owner: ThirdParty
-                Provider: GitHub
+                Owner: AWS
+                Provider: CodeStarSourceConnection
                 Version: '1'
               Configuration:
-                Owner: !Select [0, !Split ['/', !Ref GitHubRepo]]
-                Repo: !Select [1, !Split ['/', !Ref GitHubRepo]]
-                Branch: !Ref GitHubBranch
-                OAuthToken: '{{resolve:secretsmanager:github-token:SecretString:token}}'
+                ConnectionArn: !Ref GitHubConnection
+                FullRepositoryId: !Ref GitHubRepo
+                BranchName: !Ref GitHubBranch
+                OutputArtifactFormat: CODE_ZIP
               OutputArtifacts:
                 - Name: SourceOutput
         - Name: Build
