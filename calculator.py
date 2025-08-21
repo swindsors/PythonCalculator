@@ -53,7 +53,7 @@ def main():
         col1, col2 = st.columns(2)
         
         with col1:
-            st.subheader("Single Number Operations")
+            st.subheader("Single Number Operations 1")
             number = st.number_input("Enter Number", value=0.0, format="%.4f", key="sci_num")
             
             sci_operation = st.selectbox(
