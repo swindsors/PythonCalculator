@@ -1,0 +1,30 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.9
+    commands:
+      - echo Install phase started on `date`
+      - pip install --upgrade pip
+      - pip install -r requirements.txt
+  
+  pre_build:
+    commands:
+      - echo Pre-build phase started on `date`
+      - echo Testing the application
+  
+  build:
+    commands:
+      - echo Build phase started on `date`
+      - echo Build completed on `date`
+  
+  post_build:
+    commands:
+      - echo Post-build phase started on `date`
+      - echo Build completed successfully
+
+artifacts:
+  files:
+    - '**/*'
+  name: streamlit-calculator-$(date +%Y-%m-%d)
