@@ -3,11 +3,12 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      python: 3.9
+      python: 3.11
     commands:
       - echo Install phase started on `date`
-      - pip install --upgrade pip
-      - pip install --only-binary=all -r requirements.txt
+      - pip install --upgrade pip setuptools wheel
+      - echo "Installing dependencies with binary wheels only..."
+      - pip install --only-binary=:all: --no-compile -r requirements.txt
   
   pre_build:
     commands:
